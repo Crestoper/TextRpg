@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import textRpg.charc.Hero;
 import textRpg.charc.Monster;
-import textRpg.resource.BattleHistory;
+import textRpg.event.BattleHistory;
 import textRpg.resource.Config;
 import textRpg.resource.Messages;
 import textRpg.window.Windows;

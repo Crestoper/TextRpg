@@ -1,4 +1,4 @@
-package textRpg.resource;
+package textRpg.event;
 
 public class BattleHistory {
 	private String seq_no;
