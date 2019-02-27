@@ -124,16 +124,16 @@ public class Windows extends JFrame{
 	}
 	
 	public void setView() {
-		setState(con.hero, con.monNow);
-		setMap(con.hero, con.monNow);
+		setState(con.getHero(), con.getMonNow());
+		setMap(con.getHero(), con.getMonNow());
 	}
 	
 	public void setHero() {
 		String message = "";
+
+		con.setHero(inputDisplay.getText());
 		
-		con.hero = con.setHero(inputDisplay.getText());
-		
-		message = con.hero.getName() + Messages.MSG_EX_2.getString();
+		message = con.getHero().getName() + Messages.MSG_EX_2.getString();
 		
 		explainDisplay.setText(message);
 		inputDisplay.setText("");

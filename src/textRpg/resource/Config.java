@@ -23,12 +23,15 @@ public class Config {
 	
 	private int life = 3;
 	
-	public Monster monNow = mon1;
+	private Monster monNow = mon1;
 	
-	public Hero hero = null;
+	private Hero hero = null;
 	
-	public Hero setHero(String name) {
-		Hero hero = new Hero.Builder().name(name).hp(50).level(1).attack_p(7).x(18).y(16).build(); 
+	public void setHero(String name) {
+		hero = new Hero.Builder().name(name).hp(50).level(1).attack_p(7).x(18).y(16).build(); 
+	}
+	
+	public Hero getHero() {
 		return hero;
 	}
 	
@@ -45,6 +48,25 @@ public class Config {
 		return mon;
 	}
 	
+	public void setMonNow(String name) {
+		Monster mon = null;
+		
+		switch(name) {
+			case "mon1" : mon = mon1; break;
+			case "mon2" : mon = mon2; break;
+			case "monKing" : mon = monKing; break;
+			default : mon = monKing;
+		}
+		
+		monNow = mon;
+	}
+	
+	public Monster getMonNow() {
+		return monNow;
+	}
+	
+	
+	
 	public int getLife() {
 		return life;
 	}
@@ -60,5 +82,7 @@ public class Config {
 	public int getY() {
 		return map_y;
 	}
+
+
 
 }
