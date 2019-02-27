@@ -1,7 +1,5 @@
 package textRpg.charc;
 
-import textRpg.resource.Config;
-
 public class Monster extends Character{
 	
 	private int attackDistance;

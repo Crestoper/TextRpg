@@ -1,7 +1,6 @@
 package textRpg.window;
 
 import java.awt.Color;
-import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -116,20 +115,30 @@ public class Windows extends JFrame{
 		explainDisplay.append(Messages.MSG_EX_1_1.getString() + Messages.MSG_EX_1_2.getString());
 	}
 	
-	public String getInputText(){
-		return inputDisplay.getText();
+	public void apendHistoryDisplay(String bath){
+		battlehistoryDisplay.append(bath);
 	}
 	
 	public void clearInputText() {
 		inputDisplay.setText("");
 	}
 	
-	public void setExplainDisplay(String bath) {
-		explainDisplay.setText(bath);
+	public void setView() {
+		setState(con.hero, con.monNow);
+		setMap(con.hero, con.monNow);
 	}
 	
-	public void apendHistoryDisplay(String bath){
-		battlehistoryDisplay.append(bath);
+	public void setHero() {
+		String message = "";
+		
+		con.hero = con.setHero(inputDisplay.getText());
+		
+		message = con.hero.getName() + Messages.MSG_EX_2.getString();
+		
+		explainDisplay.setText(message);
+		inputDisplay.setText("");
+		
+		setView();
 	}
 	
 	public void setState(Hero hero, Monster monNow) {
@@ -139,6 +148,7 @@ public class Windows extends JFrame{
 			heroDisplay.append("Hp : " + hero.getHp() + "\n");
 			heroDisplay.append("공격력(근) : " + hero.getA_attackP() + "\n");
 			heroDisplay.append("공격력(원) : " + hero.getS_attackP() + "\n");
+		
 		}else {
 			heroDisplay.setText(Messages.MSG_GAME_OVER.getString());
 			explainDisplay.setText(Messages.MSG_GAME_OVER.getString());

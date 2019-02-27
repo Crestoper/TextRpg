@@ -1,7 +1,5 @@
 package textRpg.charc;
 
-import textRpg.resource.Config;
-
 public class Hero extends Character {
 	private int a_distance = 6;
 	private int s_distance = 3;

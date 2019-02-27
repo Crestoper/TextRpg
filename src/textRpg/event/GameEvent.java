@@ -5,12 +5,8 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import textRpg.charc.Character;
-import textRpg.charc.Hero;
-import textRpg.charc.Monster;
 import textRpg.event.BattleHistory;
 import textRpg.event.BattleHistory.History;
 import textRpg.resource.Config;
@@ -24,39 +20,24 @@ public class GameEvent  implements KeyListener{
 	
 	Windows win = null;
 	Config con = Config.getInstance();
-	
-	Monster monNow = con.getMonster("mon1");
-	Hero hero = null;
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-		if(hero == null) {
+		
+		if(con.hero == null) {
 			if(keyCode == 10) {
 				win = Windows.getInstance();
-				setHero();
+				win.setHero();
+				apendMessage(Messages.MSG_EX_1_1.getString(), 0);
 			}
 		}else{
 			if(endFlag == Messages.FLAG_N.getInt()) {
 				event(keyCode);
 
-				setView();
+				win.setView();
 			}
 		}
-	}
-	
-	private void setHero() {
-		String message = "";
-		
-		hero = con.setHero(win.getInputText());
-		
-		message = hero.getName() + Messages.MSG_EX_2.getString();
-
-		apendMessage(Messages.MSG_EX_1_1.getString(), 0);
-		win.setExplainDisplay(message);
-		win.clearInputText();
-		
-		setView();
 	}
 	
 	private void event(int e) {
@@ -70,26 +51,25 @@ public class GameEvent  implements KeyListener{
 		monsterStatusCheck();
 	}
 
-	public void setView() {
-		win.setState(hero, monNow);
-		win.setMap(hero, monNow);
-	}
+	
 	
 	private void inputEvent(int e) {
 		String message = "";
 		
-		if(hero.getHp() > 0){
+		if(con.hero.getHp() > 0){
 			if(e == 65) {
-				if(attack(monNow, Messages.FLAG_ATTACK_HERO_2.getInt()) == Messages.FLAG_Y.getInt()) message = hero.getName() + Messages.MSG_ATTACK_Y.getString();
-				else message = hero.getName() + Messages.MSG_ATTACK_N.getString();
+				if(attack(con.monNow, Messages.FLAG_ATTACK_HERO_2.getInt()) == Messages.FLAG_Y.getInt()) message = con.hero.getName() + Messages.MSG_ATTACK_Y.getString();
+				else message = con.hero.getName() + Messages.MSG_ATTACK_N.getString();
 			
 			}else if(e == 83) {
-				if(attack(monNow, Messages.FLAG_ATTACK_HERO_1.getInt()) == Messages.FLAG_Y.getInt()) message = hero.getName() + Messages.MSG_ATTACK_Y.getString();
-				else message = hero.getName() + Messages.MSG_ATTACK_N.getString();
+				if(attack(con.monNow, Messages.FLAG_ATTACK_HERO_1.getInt()) == Messages.FLAG_Y.getInt()) message = con.hero.getName() + Messages.MSG_ATTACK_Y.getString();
+				else message = con.hero.getName() + Messages.MSG_ATTACK_N.getString();
 			
 			}else if(e == 37 || e == 38 || e == 39 || e == 40){
 				heroMove(e);
-				message = hero.getName() + Messages.MSG_MOVE.getString();
+				message = con.hero.getName() + Messages.MSG_MOVE.getString();
+			}else {
+				return;
 			}
 		}
 		
@@ -97,11 +77,11 @@ public class GameEvent  implements KeyListener{
 	}
 	
 	private void monsterEvent() {
-		String message =  monNow.getName() + Messages.MSG_MOVE.getString();
+		String message =  con.monNow.getName() + Messages.MSG_MOVE.getString();
 		
 		monMoving();
 		
-		if(attack(hero, Messages.FLAG_ATTACK_MON.getInt()) == Messages.FLAG_Y.getInt()) message +=  monNow.getName() + Messages.MSG_ATTACK_Y.getString();
+		if(attack(con.hero, Messages.FLAG_ATTACK_MON.getInt()) == Messages.FLAG_Y.getInt()) message +=  con.monNow.getName() + Messages.MSG_ATTACK_Y.getString();
 		
 		apendMessage(message, 1);
 	}
@@ -109,16 +89,16 @@ public class GameEvent  implements KeyListener{
 	private void heroStatusCheck() {
 		String message = "";
 		if(con.getLife() > 1) {
-			if(hero.getHp() <= 0) {
-				hero.setHp(hero.getMaxhp());
+			if(con.hero.getHp() <= 0) {
+				con.hero.setHp(con.hero.getMaxhp());
 				con.setLife();
-				message = hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_LIFE_MINUS.getString();
+				message = con.hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_LIFE_MINUS.getString();
 				
 				apendMessage(message, 1);
 			}
 		}else{
 			endFlag = Messages.FLAG_Y.getInt();
-			message = hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_GAME_OVER.getString();
+			message = con.hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_GAME_OVER.getString();
 			con.setLife();
 			
 			apendMessage(message, 1);
@@ -128,24 +108,24 @@ public class GameEvent  implements KeyListener{
 	}
 	
 	private void  monsterStatusCheck() {
-		String message = "";
-		
-		if(monNow.getHp() <= 0){
-			String name = monNow.getName();
+		if(con.monNow.getHp() <= 0){
+			String message = "";
+			
+			String name = con.monNow.getName();
 			message = name + Messages.MSG_HP_ZERO.getString() + name + Messages.MSG_STAGE_CLEAR.getString();
 			
 			levelUp();
 			message += Messages.MSG_LEVEL_UP.getString();
 					
-			if(monNow == con.getMonster("mon1")){
-				 monNow = con.getMonster("mon2");
+			if(con.monNow == con.getMonster("mon1")){
+				 con.monNow = con.getMonster("mon2");
 				 
-				 message += monNow.getName() + Messages.MSG_MON_APPEAR.getString();
+				 message += con.monNow.getName() + Messages.MSG_MON_APPEAR.getString();
 			
-			}else if(monNow == con.getMonster("mon2")) {
-				monNow = con.getMonster("monKing");
+			}else if(con.monNow == con.getMonster("mon2")) {
+				con.monNow = con.getMonster("monKing");
 				
-				message += monNow.getName() + Messages.MSG_MON_APPEAR.getString();
+				message += con.monNow.getName() + Messages.MSG_MON_APPEAR.getString();
 			
 			}else{
 				endFlag = Messages.FLAG_Y.getInt();
@@ -156,9 +136,9 @@ public class GameEvent  implements KeyListener{
 				
 				save();
 			}
+			
+			apendMessage(message, 1);
 		}
-		
-		apendMessage(message, 1);
 	}
 	
 	private void save() {
@@ -199,50 +179,50 @@ public class GameEvent  implements KeyListener{
 	
 	//캐릭터
 	public void levelUp() {
-		int maxhp = hero.getMaxhp();
-		hero.setMaxhp((int)(maxhp * 1.6));
-		hero.setHp(hero.getMaxhp());
-		hero.setLevel(hero.getLevel() + 1);
-		hero.setA_attackP((int)(hero.getA_attackP() * 2.4));
-		hero.setS_attackP((int)(hero.getS_attackP() * 2.4));
+		int maxhp = con.hero.getMaxhp();
+		con.hero.setMaxhp((int)(maxhp * 1.6));
+		con.hero.setHp(con.hero.getMaxhp());
+		con.hero.setLevel(con.hero.getLevel() + 1);
+		con.hero.setA_attackP((int)(con.hero.getA_attackP() * 2.4));
+		con.hero.setS_attackP((int)(con.hero.getS_attackP() * 2.4));
 		
 	}
 	
 	public void heroMove(int direction) {
-		int x = hero.getX();
-		int y = hero.getY();
+		int x = con.hero.getX();
+		int y = con.hero.getY();
 		
 		if(direction == 37 && x != 2) {
-			hero.setX(x - 1);
+			con.hero.setX(x - 1);
 
 		}else if(direction == 39 && x != con.getX() - 1) {
-			hero.setX(x + 1);
+			con.hero.setX(x + 1);
 
 		}else if(direction == 38 && y != 2) {
-			hero.setY(y - 1);
+			con.hero.setY(y - 1);
 
 		}else if(direction == 40 && y != con.getY() - 1) {
-			hero.setY(y + 1);
+			con.hero.setY(y + 1);
 		}
 	}
 	
 	public int attack(Character c, int attackType) {
-		int dist = hero.distance(hero, monNow);
+		int dist = con.hero.distance(con.hero, con.monNow);
 		int aDist = 0;
 		int aPoint = 0;
 		int result = 0; 
 		
 		if(attackType == Messages.FLAG_ATTACK_HERO_1.getInt()) {
-			aDist = hero.getA_distance();
-			aPoint = hero.getA_attackP();
+			aDist = con.hero.getA_distance();
+			aPoint = con.hero.getA_attackP();
 
 		}else if(attackType == Messages.FLAG_ATTACK_HERO_2.getInt()) {
-			aDist = hero.getS_distance();
-			aPoint = hero.getS_attackP();
+			aDist = con.hero.getS_distance();
+			aPoint = con.hero.getS_attackP();
 		
 		}else if(attackType == Messages.FLAG_ATTACK_MON.getInt()) {
-			aDist = monNow.getAttackDistance();
-			aPoint = monNow.getAttackDistance();
+			aDist = con.monNow.getAttackDistance();
+			aPoint = con.monNow.getAttackDistance();
 		}
 		
 		if(dist <= aDist) {
@@ -263,8 +243,8 @@ public class GameEvent  implements KeyListener{
 		int sign = (int)(Math.random() * 2) + 1;
 		int moving = (int)(Math.random() * 2) + 1;
 		
-		int x = monNow.getX();
-		int y = monNow.getY();
+		int x = con.monNow.getX();
+		int y = con.monNow.getY();
 		
 		int move;
 				
@@ -276,12 +256,12 @@ public class GameEvent  implements KeyListener{
 			}else if(sign == 1) {
 				move = x + moving;
 
-				if(move != con.getX()) monNow.setX(move);
+				if(move != con.getX()) con.monNow.setX(move);
 			
 			}else {
 				move = x - moving;
 			
-				if(move != 1) monNow.setX(move);
+				if(move != 1) con.monNow.setX(move);
 			}
 		}else {
 			if((sign == 1 && y == 10) || (sign == 1 && y == 9 && moving == 2)) {
@@ -291,12 +271,12 @@ public class GameEvent  implements KeyListener{
 			}else if(sign == 1) {
 				move = y + moving;
 
-				if(move != con.getY()) monNow.setY(move);
+				if(move != con.getY()) con.monNow.setY(move);
 			
 			}else {
 				move = y - moving;
 			
-				if(move != 1) monNow.setY(move);
+				if(move != 1) con.monNow.setY(move);
 			}
 		}
 	}

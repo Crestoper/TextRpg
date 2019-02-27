@@ -23,6 +23,10 @@ public class Config {
 	
 	private int life = 3;
 	
+	public Monster monNow = mon1;
+	
+	public Hero hero = null;
+	
 	public Hero setHero(String name) {
 		Hero hero = new Hero.Builder().name(name).hp(50).level(1).attack_p(7).x(18).y(16).build(); 
 		return hero;
