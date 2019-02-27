@@ -45,14 +45,14 @@ public class GameEvent  implements KeyListener{
 	}
 	
 	private void setHero() {
-		String bath = "";
+		String message = "";
 		
 		hero = con.setHero(win.getInputText());
 		
-		bath = hero.getName() + Messages.MSG_EX_2.getString();
+		message = hero.getName() + Messages.MSG_EX_2.getString();
 
-		apendBath(Messages.MSG_EX_1_1.getString(), 0);
-		win.setExplainDisplay(bath);
+		apendMessage(Messages.MSG_EX_1_1.getString(), 0);
+		win.setExplainDisplay(message);
 		win.clearInputText();
 		
 		setView();
@@ -75,89 +75,89 @@ public class GameEvent  implements KeyListener{
 	}
 	
 	private void inputEvent(int e) {
-		String bath = "";
+		String message = "";
 		 
 		if(hero.getHp() > 0){
 			if(e == 65) {
-				if(hero.attack(monNow) == Messages.FLAG_Y.getInt()) bath = hero.getName() + Messages.MSG_ATTACK_Y.getString();
-				else bath = hero.getName() + Messages.MSG_ATTACK_N.getString();
+				if(hero.attack(monNow) == Messages.FLAG_Y.getInt()) message = hero.getName() + Messages.MSG_ATTACK_Y.getString();
+				else message = hero.getName() + Messages.MSG_ATTACK_N.getString();
 			
 			}else if(e == 83) {
-				if(hero.attack2(monNow) == Messages.FLAG_Y.getInt()) bath = hero.getName() + Messages.MSG_ATTACK_Y.getString();
-				else bath = hero.getName() + Messages.MSG_ATTACK_N.getString();
+				if(hero.attack2(monNow) == Messages.FLAG_Y.getInt()) message = hero.getName() + Messages.MSG_ATTACK_Y.getString();
+				else message = hero.getName() + Messages.MSG_ATTACK_N.getString();
 			
 			}else if(e == 37 || e == 38 || e == 39 || e == 40){
 				hero.move(e);
-				bath = hero.getName() + Messages.MSG_MOVE.getString();
+				message = hero.getName() + Messages.MSG_MOVE.getString();
 			}
 		}
 		
-		apendBath(bath , 1);
+		apendMessage(message , 1);
 	}
 	
 	private void monsterEvent() {
-		String bath =  monNow.getName() + Messages.MSG_MOVE.getString();
+		String message =  monNow.getName() + Messages.MSG_MOVE.getString();
 		
 		monNow.autoMoving();
 		
-		if(monNow.attack(hero) == Messages.FLAG_Y.getInt()) bath +=  monNow.getName() + Messages.MSG_ATTACK_Y.getString();
+		if(monNow.attack(hero) == Messages.FLAG_Y.getInt()) message +=  monNow.getName() + Messages.MSG_ATTACK_Y.getString();
 		
-		apendBath(bath, 1);
+		apendMessage(message, 1);
 	}
 	
 	private void heroStatusCheck() {
-		String bath = "";
+		String message = "";
 		if(con.getLife() > 1) {
 			if(hero.getHp() <= 0) {
 				hero.setHp(hero.getMaxhp());
 				con.setLife();
-				bath = hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_LIFE_MINUS.getString();
+				message = hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_LIFE_MINUS.getString();
 				
-				apendBath(bath, 1);
+				apendMessage(message, 1);
 			}
 		}else{
 			endFlag = Messages.FLAG_Y.getInt();
-			bath = hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_GAME_OVER.getString();
+			message = hero.getName() + Messages.MSG_HP_ZERO.getString() + Messages.MSG_GAME_OVER.getString();
 			con.setLife();
 			
-			apendBath(bath, 1);
+			apendMessage(message, 1);
 
 			save();
 		}
 	}
 	
 	private void  monsterStatusCheck() {
-		String bath = "";
+		String message = "";
 		
 		if(monNow.getHp() <= 0){
 			String name = monNow.getName();
-			bath = name + Messages.MSG_HP_ZERO.getString() + name + Messages.MSG_STAGE_CLEAR.getString();
+			message = name + Messages.MSG_HP_ZERO.getString() + name + Messages.MSG_STAGE_CLEAR.getString();
 			
 			hero.levelUp();
-			bath += Messages.MSG_LEVEL_UP.getString();
+			message += Messages.MSG_LEVEL_UP.getString();
 					
 			if(monNow == con.getMonster("mon1")){
 				 monNow = con.getMonster("mon2");
 				 
-				 bath += monNow.getName() + Messages.MSG_MON_APPEAR.getString();
+				 message += monNow.getName() + Messages.MSG_MON_APPEAR.getString();
 			
 			}else if(monNow == con.getMonster("mon2")) {
 				monNow = con.getMonster("monKing");
 				
-				bath += monNow.getName() + Messages.MSG_MON_APPEAR.getString();
+				message += monNow.getName() + Messages.MSG_MON_APPEAR.getString();
 			
 			}else{
 				endFlag = Messages.FLAG_Y.getInt();
-				bath += Messages.MSG_GAME_CLEAR.getString();
+				message += Messages.MSG_GAME_CLEAR.getString();
 				
-				apendBath(bath, 1);
-				apendBath(Messages.MSG_EX_3.getString(), 0);
+				apendMessage(message, 1);
+				apendMessage(Messages.MSG_EX_3.getString(), 0);
 				
 				save();
 			}
 		}
 		
-		apendBath(bath, 1);
+		apendMessage(message, 1);
 	}
 	
 	private void save() {
@@ -188,7 +188,7 @@ public class GameEvent  implements KeyListener{
 	}
 	
 	int i = 1;
-	private void apendBath(String message, int flag) {
+	private void apendMessage(String message, int flag) {
 		if(flag == 1) win.apendHistoryDisplay(message);
 
 		battleHistory.add(message);
