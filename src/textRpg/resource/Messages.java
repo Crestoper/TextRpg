@@ -20,6 +20,9 @@ public enum Messages {
 	,MSG_SAVE("SAVE", "결과 기록")
 	,FLAG_Y("Y", 1)
 	,FLAG_N("N", 0)
+	,FLAG_ATTACK_HERO_1("근거리 공격", 0)
+	,FLAG_ATTACK_HERO_2("원거리 공격", 1)
+	,FLAG_ATTACK_MON("몬스터 공격", 2)
 	;
 	
 	private String key;

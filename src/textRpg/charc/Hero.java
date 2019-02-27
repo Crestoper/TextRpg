@@ -58,68 +58,6 @@ public class Hero extends Character {
 		}
 	}
 	
-	public void levelUp() {
-		int maxhp = this.getMaxhp();
-		this.setMaxhp((int)(maxhp * 1.6));
-		this.setHp(this.getMaxhp());
-		this.setLevel(this.getLevel() + 1);
-		this.setA_attackP((int)(this.getA_attackP() * 2.4));
-		this.setS_attackP((int)(this.getS_attackP() * 2.4));
-		
-	}
-	
-	public void move(int direction) {
-		Config con = Config.getInstance();
-		
-		if(direction == 37 && this.getX() != 2) {
-			this.setX(this.getX() - 1);
-
-		}else if(direction == 39 && this.getX() != con.getX() - 1) {
-			this.setX(this.getX() + 1);
-
-		}else if(direction == 38 && this.getY() != 2) {
-			this.setY(this.getY() - 1);
-
-		}else if(direction == 40 && this.getY() != con.getY() - 1) {
-			this.setY(this.getY() + 1);
-		}
-	}
-	
-	public int attack(Character real) {
-		int result = 0;
-		int dist = distance(this, real);
-		
-		if(dist <= a_distance) {
-			int hp = real.getHp()- this.getA_attackP();
-
-			if(hp <= 0) hp = 0;
-			
-			real.setHp(hp);
-			
-			result = 1;
-		}
-		
-		return result;
-	}
-	
-	public int attack2(Character real) {
-		int result = 0;
-		int dist = distance(this, real);
-		
-		if(dist <= s_distance) {
-			int hp = real.getHp() - this.getS_attackP();
-
-			if(hp <= 0) hp = 0;
-			
-			real.setHp(hp);
-			
-			result = 1;
-		}
-		
-		return result;
-	}
-	
-	
 	public int getA_distance() {
 		return a_distance;
 	}
