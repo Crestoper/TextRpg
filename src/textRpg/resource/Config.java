@@ -24,7 +24,8 @@ public class Config {
 	private int life = 3;
 	
 	public Hero setHero(String name) {
-		return new Hero(name, 50, 1, 7, 18, 16);
+		Hero hero = new Hero.Builder().name(name).hp(50).level(1).attack_p(7).x(18).y(16).build(); 
+		return hero;
 	}
 	
 	public Monster getMonster(String name) {

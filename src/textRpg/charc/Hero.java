@@ -8,18 +8,54 @@ public class Hero extends Character {
 	private int a_attackP ;
 	private int s_attackP ;
 	
-	public Hero(String name) {
-		super(name, 50, 1, 7, 18, 15);
+	public Hero(Builder builder) {
+		super(builder.name, builder.hp, builder.level, builder.attack_p, builder.x, builder.y);
 		
 		a_attackP = super.getAttack_p();
 		s_attackP = super.getAttack_p() * 2;
 	}
 	
-	public Hero(String name, int hp, int level, int attack_p, int x, int y) {
-		super(name, hp, level, attack_p, x, y);
+	public static class Builder{
+		private String name; 
+		private int hp;
+		private int level;
+		private int attack_p;
+		private int x;
+		private int y;
 		
-		a_attackP = super.getAttack_p();
-		s_attackP = super.getAttack_p() * 2;
+		public Builder name(String s) {
+			name = s;
+			return this;
+		}
+		
+		public Builder hp(int s) {
+			hp = s;
+			return this;
+		}
+		
+		public Builder level(int s) {
+			level = s;
+			return this;
+		}
+		
+		public Builder attack_p(int s) {
+			attack_p = s;
+			return this;
+		}
+		
+		public Builder x(int s) {
+			x = s;
+			return this;
+		}
+		
+		public Builder y(int s) {
+			y = s;
+			return this;
+		}
+		
+		public Hero build() {
+			return new Hero(this);
+		}
 	}
 	
 	public void levelUp() {
@@ -49,7 +85,6 @@ public class Hero extends Character {
 		}
 	}
 	
-	//원거리공격
 	public int attack(Character real) {
 		int result = 0;
 		int dist = distance(this, real);
