@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import textRpg.charc.Hero;
 import textRpg.charc.Monster;
 import textRpg.event.BattleHistory;
+import textRpg.event.BattleHistory.History;
 import textRpg.resource.Config;
 import textRpg.resource.Messages;
 import textRpg.window.Windows;
@@ -18,8 +19,8 @@ import textRpg.window.Windows;
 public class GameEvent  implements KeyListener{
 	public static int endFlag = Messages.FLAG_N.getInt();
 	
-	ArrayList<BattleHistory> battleHistory = new ArrayList<BattleHistory>();
-
+	BattleHistory battleHistory = new BattleHistory();
+	
 	Windows win = null;
 	Config con = Config.getInstance();
 	
@@ -165,19 +166,12 @@ public class GameEvent  implements KeyListener{
 			FileWriter fw = null;
 			
 			try {
-				String line = System.getProperty("line.separator");
 				File path = new File("");
 				
 				fw = new FileWriter(new File(path + "BattleHistory.txt"));
 	
-				for(BattleHistory s : battleHistory) {
-					String bath = "";
-					String content = "";
-
-					content = s.getContent().replace("!", "!" + line).replace(".", "." + line);
-					bath += s.getSeq_no() + " / " + s.getTime() + line + content;
-					
-					fw.write(bath);
+				for(History s : battleHistory.get()) {
+					fw.write(s.get());
 				}
 				
 			} catch (Exception e) {
@@ -194,16 +188,10 @@ public class GameEvent  implements KeyListener{
 	}
 	
 	int i = 1;
-	private void apendBath(String bath, int flag) {
-		if(flag == 1) win.apendHistoryDisplay(bath);
+	private void apendBath(String message, int flag) {
+		if(flag == 1) win.apendHistoryDisplay(message);
 
-		BattleHistory his = new BattleHistory();
-		SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-		
-		his.setSeq_no(i++);
-		his.setTime(format.format (System.currentTimeMillis()));
-		his.setContent(bath);
-		battleHistory.add(his);
+		battleHistory.add(message);
 		
 		win.clearInputText();
 	}
